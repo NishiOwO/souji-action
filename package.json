@@ -23,17 +23,18 @@
   "engines": {
     "node": ">=20"
   },
+  "packageManager": "pnpm@8.14.1",
   "scripts": {
-    "bundle": "npm run format:write && npm run package",
+    "bundle": "pnpm run format:write && pnpm run package",
     "ci-test": "jest",
     "coverage": "make-coverage-badge --output-path ./badges/coverage.svg",
     "format:write": "prettier --write **/*.ts",
     "format:check": "prettier --check **/*.ts",
-    "lint": "npx eslint . -c ./.github/linters/.eslintrc.yml",
+    "lint": "eslint . -c ./.github/linters/.eslintrc.yml",
     "package": "ncc build src/index.ts --license licenses.txt",
-    "package:watch": "npm run package -- --watch",
+    "package:watch": "pnpm run package -- --watch",
     "test": "jest",
-    "all": "npm run format:write && npm run lint && npm run test && npm run coverage && npm run package"
+    "all": "pnpm run format:write && pnpm run lint && pnpm run test && pnpm run coverage && pnpm run package"
   },
   "license": "MIT",
   "jest": {
