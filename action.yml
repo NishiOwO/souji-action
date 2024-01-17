@@ -1,23 +1,21 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: "souji-action"
+description: "Clean up the GitHub Action cache"
+author: "4m-mazi"
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
+# https://actions-cool.github.io/github-action-branding/
 branding:
-  icon: 'heart'
-  color: 'red'
+  icon: "wind"
+  color: "purple"
 
 # Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
-    required: true
-    default: '1000'
+  repo-token:
+    description: "The GitHub token used to manage repository action cache"
+    required: false
+    default: ${{ github.token }}
 
 # Define your outputs here.
-outputs:
-  time:
-    description: 'Your output description here'
 
 runs:
   using: node20
