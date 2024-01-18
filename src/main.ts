@@ -1,5 +1,8 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import * as v from 'valibot'
+
+const OptionalStringSchema = v.optional(v.string())
 
 const deleteRefActionsCache = async (
   octokit: ReturnType<typeof github.getOctokit>,
@@ -43,8 +46,11 @@ export async function run(): Promise<void> {
     // MEMO: payloadから取得できるのは確認したけど、型何もついてない
     const payload = github.context.payload
     const prNumber = payload.pull_request?.number
-    const headRef = payload.pull_request?.head?.ref as string | undefined
-    const ref = payload.ref as string | undefined
+    const headRef = v.parse(
+      OptionalStringSchema,
+      payload.pull_request?.head?.ref
+    )
+    const ref = v.parse(OptionalStringSchema, payload.ref)
 
     if (prNumber) {
       // fire when event is pull_request or pull_request_target or pull_request_review or pull_request_review_comment

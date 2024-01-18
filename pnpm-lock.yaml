@@ -11,6 +11,9 @@ dependencies:
   '@actions/github':
     specifier: ^6.0.0
     version: 6.0.0
+  valibot:
+    specifier: ^0.26.0
+    version: 0.26.0
 
 devDependencies:
   '@types/jest':
@@ -4236,6 +4239,10 @@ packages:
       '@types/istanbul-lib-coverage': 2.0.4
       convert-source-map: 1.9.0
     dev: true
+
+  /valibot@0.26.0:
+    resolution: {integrity: sha512-cM8VM9jsJGx9P4qarZUBXd0I88OVI4ddtyZ1sAMiofC3Usj7Jxm2c8Xx5accdTrKc3CblO8yyytRaJ6lrsuA+Q==}
+    dev: false
 
   /vue-eslint-parser@9.3.2(eslint@8.56.0):
     resolution: {integrity: sha512-q7tWyCVaV9f8iQyIA5Mkj/S6AoJ9KBN8IeUSf3XEmBrOtxOZnfTg5s4KClbZBCK3GtnT/+RyCLZyDHuZwTuBjg==}
