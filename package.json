@@ -1,21 +1,20 @@
 {
-  "name": "typescript-action",
-  "description": "GitHub Actions TypeScript template",
+  "name": "souji-action",
+  "description": "Clean up the GitHub Action cache",
   "version": "0.0.0",
   "author": "",
   "private": true,
-  "homepage": "https://github.com/actions/typescript-action",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/4m-mazi/souji-action.git"
   },
   "bugs": {
-    "url": "https://github.com/actions/typescript-action/issues"
+    "url": "https://github.com/4m-mazi/souji-action/issues"
   },
   "keywords": [
     "actions",
-    "node",
-    "setup"
+    "cache",
+    "delete"
   ],
   "exports": {
     ".": "./dist/index.js"
