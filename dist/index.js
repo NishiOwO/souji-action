@@ -29620,6 +29620,33 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 1356:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.convertRef = void 0;
+exports.convertRef = ((str, { refType }) => {
+    if (str === null || str === undefined)
+        return null;
+    if (str.startsWith('refs/'))
+        return str;
+    switch (refType) {
+        case 'branch':
+            return `refs/heads/${str}`;
+        case 'tag':
+            return `refs/tags/${str}`;
+        case 'pull':
+            return `refs/pull/${str}/merge`;
+        default:
+            return null;
+    }
+});
+
+
+/***/ }),
+
 /***/ 9356:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -29652,8 +29679,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core = __importStar(__nccwpck_require__(9093));
 const github = __importStar(__nccwpck_require__(5942));
-const v = __importStar(__nccwpck_require__(6661));
-const OptionalStringSchema = v.optional(v.string());
+const ref_1 = __nccwpck_require__(2636);
 const deleteRefActionsCache = async (octokit, repo, ref) => {
     // Get the list of cache IDs
     // https://github.com/octokit/plugin-paginate-rest.js#octokitpaginate
@@ -29682,38 +29708,136 @@ async function run() {
         const token = core.getInput('repo-token');
         const octokit = github.getOctokit(token);
         // get repostiory information
-        const { repo } = github.context;
-        // MEMO: payloadから取得できるのは確認したけど、型何もついてない
-        const payload = github.context.payload;
-        const prNumber = payload.pull_request?.number;
-        const headRef = v.parse(OptionalStringSchema, payload.pull_request?.head?.ref);
-        const ref = v.parse(OptionalStringSchema, payload.ref);
-        if (prNumber) {
-            // fire when event is pull_request or pull_request_target or pull_request_review or pull_request_review_comment
-            core.info(`delete cache for refs/pull/${prNumber}/merge`);
-            await deleteRefActionsCache(octokit, repo, `refs/pull/${prNumber}/merge`);
-            core.info('done ✅');
+        const { repo, eventName, payload } = github.context;
+        const ref = (0, ref_1.getRef)({ eventName, payload });
+        if (ref === null) {
+            core.info('Could not determine deletion target.');
+            core.info('If you suspect this is a bug, please consider raising an issue to help us address it promptly.');
+            return;
         }
-        if (headRef) {
-            // fire when event is pull_request or pull_request_target or pull_request_review or pull_request_review_comment
-            core.info(`delete cache for refs/heads/${headRef}`);
-            await deleteRefActionsCache(octokit, repo, `refs/heads/${headRef}`);
-            core.info('done ✅');
-        }
-        if (ref) {
-            // fire when event is workflow_dispatch or push
-            core.info(`delete cache for ${ref}`);
-            await deleteRefActionsCache(octokit, repo, ref);
-            core.info('done ✅');
-        }
+        core.info(`Delete cache for ${ref}`);
+        await deleteRefActionsCache(octokit, repo, ref);
+        core.info('Done ✅');
     }
     catch (error) {
         // Fail the workflow run if an error occurs
-        if (error instanceof Error)
+        if (error instanceof Error) {
             core.setFailed(error.message);
+            core.info('If you suspect this is a bug, please consider raising an issue to help us address it promptly.');
+        }
     }
 }
 exports.run = run;
+
+
+/***/ }),
+
+/***/ 2636:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getRef = void 0;
+const v = __importStar(__nccwpck_require__(6661));
+const schema_1 = __nccwpck_require__(3731);
+const utils_1 = __nccwpck_require__(1356);
+exports.getRef = (({ eventName, payload }) => {
+    switch (eventName) {
+        case 'check_run':
+            return (0, utils_1.convertRef)(v.parse(schema_1.NullableStringSchema, payload.check_run.check_suite.head_branch), { refType: 'branch' });
+        case 'check_suite':
+            return (0, utils_1.convertRef)(v.parse(schema_1.NullableStringSchema, payload.check_suite.head_branch), { refType: 'branch' });
+        case 'create':
+            return (0, utils_1.convertRef)(v.parse(schema_1.NullableStringSchema, payload.ref), {
+                refType: payload.ref_type
+            });
+        case 'delete':
+            return (0, utils_1.convertRef)(v.parse(schema_1.NullableStringSchema, payload.ref), {
+                refType: payload.ref_type
+            });
+        case 'deployment_status':
+            return (0, utils_1.convertRef)(v.parse(schema_1.OptionalStringSchema, payload.workflow_run?.head_branch), {
+                refType: 'branch'
+            });
+        case 'issue_comment':
+            return (0, utils_1.convertRef)(v.parse(schema_1.StringSchema, payload.issue?.number.toString()), {
+                refType: 'pull'
+            });
+        case 'pull_request':
+            return (0, utils_1.convertRef)(payload.pull_request?.number.toString(), {
+                refType: 'pull'
+            });
+        case 'pull_request_review':
+            return (0, utils_1.convertRef)(payload.pull_request?.number.toString(), {
+                refType: 'pull'
+            });
+        case 'pull_request_review_comment':
+            return (0, utils_1.convertRef)(payload.pull_request?.number.toString(), {
+                refType: 'pull'
+            });
+        case 'pull_request_target':
+            return (0, utils_1.convertRef)(payload.pull_request?.number.toString(), {
+                refType: 'pull'
+            });
+        case 'push':
+            return v.parse(schema_1.StringSchema, payload.ref);
+        case 'registry_package':
+            return (0, utils_1.convertRef)(v.parse(schema_1.OptionalStringSchema, payload.registry_package?.package_version?.release?.tag_name), {
+                refType: 'tag'
+            });
+        case 'release':
+            return (0, utils_1.convertRef)(v.parse(schema_1.StringSchema, payload.release.tag_name), {
+                refType: 'tag'
+            });
+        case 'workflow_dispatch':
+            return v.parse(schema_1.StringSchema, payload.ref);
+        case 'workflow_run':
+            return (0, utils_1.convertRef)(v.parse(schema_1.NullableStringSchema, payload.workflow_run.head_branch), {
+                refType: 'branch'
+            });
+        default:
+            throw new Error(`${eventName} event is not supported.`);
+    }
+});
+
+
+/***/ }),
+
+/***/ 3731:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.NullableStringSchema = exports.OptionalStringSchema = exports.StringSchema = void 0;
+const valibot_1 = __nccwpck_require__(6661);
+exports.StringSchema = (0, valibot_1.string)();
+exports.OptionalStringSchema = (0, valibot_1.optional)((0, valibot_1.string)());
+exports.NullableStringSchema = (0, valibot_1.nullable)((0, valibot_1.string)());
 
 
 /***/ }),
