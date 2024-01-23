@@ -29627,7 +29627,7 @@ function wrappy (fn, cb) {
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.convertRef = void 0;
-exports.convertRef = ((str, { refType }) => {
+const convertRef = (str, { refType }) => {
     if (str === null || str === undefined)
         return null;
     if (str.startsWith('refs/'))
@@ -29639,10 +29639,9 @@ exports.convertRef = ((str, { refType }) => {
             return `refs/tags/${str}`;
         case 'pull':
             return `refs/pull/${str}/merge`;
-        default:
-            return null;
     }
-});
+};
+exports.convertRef = convertRef;
 
 
 /***/ }),
@@ -29765,16 +29764,13 @@ exports.getRef = void 0;
 const v = __importStar(__nccwpck_require__(6661));
 const schema_1 = __nccwpck_require__(3731);
 const utils_1 = __nccwpck_require__(1356);
-exports.getRef = (({ eventName, payload }) => {
+const getRef = ({ eventName, payload }) => {
     switch (eventName) {
         case 'check_run':
             return (0, utils_1.convertRef)(v.parse(schema_1.NullableStringSchema, payload.check_run.check_suite.head_branch), { refType: 'branch' });
         case 'check_suite':
             return (0, utils_1.convertRef)(v.parse(schema_1.NullableStringSchema, payload.check_suite.head_branch), { refType: 'branch' });
         case 'create':
-            return (0, utils_1.convertRef)(v.parse(schema_1.NullableStringSchema, payload.ref), {
-                refType: payload.ref_type
-            });
         case 'delete':
             return (0, utils_1.convertRef)(v.parse(schema_1.NullableStringSchema, payload.ref), {
                 refType: payload.ref_type
@@ -29788,17 +29784,8 @@ exports.getRef = (({ eventName, payload }) => {
                 refType: 'pull'
             });
         case 'pull_request':
-            return (0, utils_1.convertRef)(payload.pull_request?.number.toString(), {
-                refType: 'pull'
-            });
         case 'pull_request_review':
-            return (0, utils_1.convertRef)(payload.pull_request?.number.toString(), {
-                refType: 'pull'
-            });
         case 'pull_request_review_comment':
-            return (0, utils_1.convertRef)(payload.pull_request?.number.toString(), {
-                refType: 'pull'
-            });
         case 'pull_request_target':
             return (0, utils_1.convertRef)(payload.pull_request?.number.toString(), {
                 refType: 'pull'
@@ -29822,7 +29809,8 @@ exports.getRef = (({ eventName, payload }) => {
         default:
             throw new Error(`${eventName} event is not supported.`);
     }
-});
+};
+exports.getRef = getRef;
 
 
 /***/ }),

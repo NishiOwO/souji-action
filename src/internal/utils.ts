@@ -1,4 +1,7 @@
-export const convertRef = ((str, { refType }) => {
+export const convertRef = (
+  str: string | undefined | null,
+  { refType }: { refType: 'branch' | 'tag' | 'pull' }
+): string | null => {
   if (str === null || str === undefined) return null
   if (str.startsWith('refs/')) return str
   switch (refType) {
@@ -8,10 +11,5 @@ export const convertRef = ((str, { refType }) => {
       return `refs/tags/${str}`
     case 'pull':
       return `refs/pull/${str}/merge`
-    default:
-      return null
   }
-}) satisfies (
-  str: string | undefined | null,
-  { refType }: { refType: 'branch' | 'tag' | 'pull' }
-) => string | null
+}
