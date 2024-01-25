@@ -15,10 +15,12 @@ required.
 [required to delete caches](https://docs.github.com/en/rest/actions/cache?apiVersion=2022-11-28#delete-a-github-actions-cache-for-a-repository-using-a-cache-id).
 
 ```yml
+name: cleanup caches by a branch
 on:
-  pull_request:
+  pull_request_target:
     types:
       - closed
+  delete:
 
 jobs:
   cleanup:
@@ -30,7 +32,13 @@ jobs:
         uses: 4m-mazi/souji-action@v1 # Check and specify the latest version
 ```
 
-For instance, when a Pull Request created in the branch `feat/awesome-feature`
-is "merged" or "closed," a workflow event is triggered and the workflow is
-executed. At this time, all GitHub Actions Caches created under the merge ref
-`refs/pull/{pull_request_number}/merge` are deleted.
+This workflow cleans up caches for branches when they are merged(closed) or
+deleted. \
+This will clear the following cache:
+
+- merge ref `refs/pull/<number>/merge`
+  - When a pull request is merged or closed, this workflow removes cached data
+    associated with the merge ref.
+- branch `<branch name>`
+  - When a branch is deleted, this workflow deletes the cached data associated
+    with the branch.
