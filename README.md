@@ -42,3 +42,37 @@ This will clear the following cache:
 - branch `<branch name>`
   - When a branch is deleted, this workflow deletes the cached data associated
     with the branch.
+
+## Supported events
+
+> [!IMPORTANT]\
+> The branch(ref) to be deleted is determined by the context of the event.\
+> Please note that this is not the same as `$GITHUB_REF`(`github.ref`).
+
+| event                         | branch name format of caches to be deleted |
+| :---------------------------- | :----------------------------------------- |
+| `check_run`                   | `<branch name>`                            |
+| `check_suite`                 | `<branch name>`                            |
+| `create` (branch)             | `<branch name>`                            |
+| `create` (tag)                | `refs/tags/<tag name>`                     |
+| `delete` (branch)             | `<branch name>`                            |
+| `delete` (tag)                | `refs/tags/<tag name>`                     |
+| `deployment_status`           | `<branch name>`                            |
+| `issue_comment` [^1]          | `refs/pull/<number>/merge`                 |
+| `pull_request` [^2]           | `refs/pull/<number>/merge`                 |
+| `pull_request_review`         | `refs/pull/<number>/merge`                 |
+| `pull_request_review_comment` | `refs/pull/<number>/merge`                 |
+| `pull_request_target`         | `refs/pull/<number>/merge`                 |
+| `push` (branch)               | `<branch name>`                            |
+| `push` (tag)                  | `refs/tags/<tag name>`                     |
+| `registry_package`            | `refs/tags/<tag name>`                     |
+| `release`                     | `refs/tags/<tag name>`                     |
+| `workflow_dispatch` (branch)  | `<branch name>`                            |
+| `workflow_dispatch` (tag)     | `refs/tags/<tag name>`                     |
+| `workflow_run`                | `<branch name>`                            |
+
+[^1]: Only works with pull request comments.
+[^2]:
+    This action doesn't work when triggered by a `pull_request` event if the
+    pull request is a cross-repository pull request.\
+    Therefore, it is recommended to use the `pull_request_target` event instead.
