@@ -12,8 +12,8 @@ dependencies:
     specifier: ^6.0.0
     version: 6.0.0
   valibot:
-    specifier: ^0.26.0
-    version: 0.26.0
+    specifier: ^0.27.1
+    version: 0.27.1
 
 devDependencies:
   '@types/jest':
@@ -4256,8 +4256,8 @@ packages:
       convert-source-map: 1.9.0
     dev: true
 
-  /valibot@0.26.0:
-    resolution: {integrity: sha512-cM8VM9jsJGx9P4qarZUBXd0I88OVI4ddtyZ1sAMiofC3Usj7Jxm2c8Xx5accdTrKc3CblO8yyytRaJ6lrsuA+Q==}
+  /valibot@0.27.1:
+    resolution: {integrity: sha512-k57/5/kMwMjiVP0LUMpa+n4ihSemuXshz1ND4fftKw1bkHZYN/TnHcbjaEie3K7FwAceiOgugLZPjSaNxdygeg==}
     dev: false
 
   /vue-eslint-parser@9.4.1(eslint@8.56.0):
