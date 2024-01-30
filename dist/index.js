@@ -29679,7 +29679,7 @@ exports.run = void 0;
 const core = __importStar(__nccwpck_require__(9093));
 const github = __importStar(__nccwpck_require__(5942));
 const ref_1 = __nccwpck_require__(2636);
-const deleteRefActionsCache = async (octokit, repo, ref) => {
+const deleteRefActionsCaches = async (octokit, repo, ref) => {
     // Get the list of cache IDs
     // https://github.com/octokit/plugin-paginate-rest.js#octokitpaginate
     const iterator = octokit.paginate.iterator(octokit.rest.actions.getActionsCacheList, {
@@ -29715,7 +29715,7 @@ async function run() {
             return;
         }
         core.info(`Delete cache for ${ref}`);
-        await deleteRefActionsCache(octokit, repo, ref);
+        await deleteRefActionsCaches(octokit, repo, ref);
         core.info('Done ✅');
     }
     catch (error) {

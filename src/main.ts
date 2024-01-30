@@ -2,7 +2,7 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import { getRef } from './ref'
 
-const deleteRefActionsCache = async (
+const deleteRefActionsCaches = async (
   octokit: ReturnType<typeof github.getOctokit>,
   repo: { owner: string; repo: string },
   ref: string
@@ -51,7 +51,7 @@ export async function run(): Promise<void> {
       return
     }
     core.info(`Delete cache for ${ref}`)
-    await deleteRefActionsCache(octokit, repo, ref)
+    await deleteRefActionsCaches(octokit, repo, ref)
     core.info('Done ✅')
   } catch (error) {
     // Fail the workflow run if an error occurs
