@@ -1,17 +1,17 @@
-name: "Souji Action"
-description: "Clean up the GitHub Action cache"
-author: "4m-mazi"
+name: 'Souji Action'
+description: 'Clean up the GitHub Action cache'
+author: '4m-mazi'
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
 # https://actions-cool.github.io/github-action-branding/
 branding:
-  icon: "wind"
-  color: "purple"
+  icon: 'wind'
+  color: 'purple'
 
 # Define your inputs here.
 inputs:
   repo-token:
-    description: "The GitHub token used to manage repository action cache"
+    description: 'The GitHub token used to manage repository action cache'
     required: false
     default: ${{ github.token }}
 
