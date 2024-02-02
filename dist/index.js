@@ -29688,12 +29688,13 @@ const deleteRefActionsCaches = async (octokit, repo, ref) => {
     });
     // https://github.com/octokit/octokit.js/tree/b831b6bce43d56b97e25a996e1b43525486d8bd3?tab=readme-ov-file#pagination
     for await (const { data: cacheList } of iterator) {
-        for (const { id: cacheId } of cacheList) {
-            if (!cacheId)
+        for (const cache of cacheList) {
+            if (!cache.id)
                 continue;
+            core.info(`   - Cache with key ${cache.key}`);
             await octokit.rest.actions.deleteActionsCacheById({
                 ...repo,
-                cache_id: cacheId
+                cache_id: cache.id
             });
         }
     }
@@ -29710,19 +29711,19 @@ async function run() {
         const { repo, eventName, payload } = github.context;
         const ref = (0, ref_1.getRef)({ eventName, payload });
         if (ref === null) {
-            core.info('Could not determine deletion target.');
-            core.info('If you suspect this is a bug, please consider raising an issue to help us address it promptly.');
+            core.info('🤔 Could not determine deletion target.');
+            core.info('ℹ️ If you suspect this is a bug, please consider raising an issue to help us address it promptly.');
             return;
         }
-        core.info(`Delete cache for ${ref}`);
+        core.info(`⌛ Deleting caches on ${ref}`);
         await deleteRefActionsCaches(octokit, repo, ref);
-        core.info('Done ✅');
+        core.info('✅ Done');
     }
     catch (error) {
         // Fail the workflow run if an error occurs
         if (error instanceof Error) {
             core.setFailed(error.message);
-            core.info('If you suspect this is a bug, please consider raising an issue to help us address it promptly.');
+            core.info('ℹ️ If you suspect this is a bug, please consider raising an issue to help us address it promptly.');
         }
     }
 }
