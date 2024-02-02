@@ -1,9 +1,9 @@
 # Souji Action 🧹
 
-[![GitHub Super-Linter](https://github.com/actions/typescript-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
-![CI](https://github.com/actions/typescript-action/actions/workflows/ci.yml/badge.svg)
-[![Check dist/](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml)
-[![CodeQL](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml)
+[![GitHub Super-Linter](https://github.com/4m-mazi/souji-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
+![CI](https://github.com/4m-mazi/souji-action/actions/workflows/ci.yml/badge.svg)
+[![Check dist/](https://github.com/4m-mazi/souji-action/actions/workflows/check-dist.yml/badge.svg)](https://github.com/actions/4m-mazi/souji-action/actions/workflows/check-dist.yml)
+[![CodeQL](https://github.com/4m-mazi/souji-action/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/4m-mazi/souji-action/actions/workflows/codeql-analysis.yml)
 
 Souji Action is a GitHub Action that deletes all GitHub Actions Caches related
 to the context of the triggered workflow event, without any configuration
