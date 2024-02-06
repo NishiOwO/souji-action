@@ -1,33 +1,36 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import { getRef } from './ref'
+import type * as types from '@octokit/openapi-types'
+
+type Cache =
+  types.components['schemas']['actions-cache-list']['actions_caches'][number]
 
 const deleteRefActionsCaches = async (
   octokit: ReturnType<typeof github.getOctokit>,
   repo: { owner: string; repo: string },
   ref: string
 ): Promise<void> => {
-  // Get the list of cache IDs
+  const deleteCache = async (cache: Cache): Promise<void> => {
+    if (!cache.id) return
+    core.info(`   - Cache with key ${cache.key}`)
+    await octokit.rest.actions.deleteActionsCacheById({
+      ...repo,
+      cache_id: cache.id
+    })
+  }
+
   // https://github.com/octokit/plugin-paginate-rest.js#octokitpaginate
-  const iterator = octokit.paginate.iterator(
+  const caches = await octokit.paginate(
     octokit.rest.actions.getActionsCacheList,
     {
       ...repo,
-      ref
+      ref,
+      per_page: 100
     }
   )
 
-  // https://github.com/octokit/octokit.js/tree/b831b6bce43d56b97e25a996e1b43525486d8bd3?tab=readme-ov-file#pagination
-  for await (const { data: cacheList } of iterator) {
-    for (const cache of cacheList) {
-      if (!cache.id) continue
-      core.info(`   - Cache with key ${cache.key}`)
-      await octokit.rest.actions.deleteActionsCacheById({
-        ...repo,
-        cache_id: cache.id
-      })
-    }
-  }
+  await Promise.all(caches.map(async cache => deleteCache(cache)))
 }
 
 /**

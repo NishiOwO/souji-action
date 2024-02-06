@@ -29680,24 +29680,22 @@ const core = __importStar(__nccwpck_require__(9093));
 const github = __importStar(__nccwpck_require__(5942));
 const ref_1 = __nccwpck_require__(2636);
 const deleteRefActionsCaches = async (octokit, repo, ref) => {
-    // Get the list of cache IDs
+    const deleteCache = async (cache) => {
+        if (!cache.id)
+            return;
+        core.info(`   - Cache with key ${cache.key}`);
+        await octokit.rest.actions.deleteActionsCacheById({
+            ...repo,
+            cache_id: cache.id
+        });
+    };
     // https://github.com/octokit/plugin-paginate-rest.js#octokitpaginate
-    const iterator = octokit.paginate.iterator(octokit.rest.actions.getActionsCacheList, {
+    const caches = await octokit.paginate(octokit.rest.actions.getActionsCacheList, {
         ...repo,
-        ref
+        ref,
+        per_page: 100
     });
-    // https://github.com/octokit/octokit.js/tree/b831b6bce43d56b97e25a996e1b43525486d8bd3?tab=readme-ov-file#pagination
-    for await (const { data: cacheList } of iterator) {
-        for (const cache of cacheList) {
-            if (!cache.id)
-                continue;
-            core.info(`   - Cache with key ${cache.key}`);
-            await octokit.rest.actions.deleteActionsCacheById({
-                ...repo,
-                cache_id: cache.id
-            });
-        }
-    }
+    await Promise.all(caches.map(async (cache) => deleteCache(cache)));
 };
 /**
  * The main function for the action.

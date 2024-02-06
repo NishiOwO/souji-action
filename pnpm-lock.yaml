@@ -16,6 +16,9 @@ dependencies:
     version: 0.27.1
 
 devDependencies:
+  '@octokit/openapi-types':
+    specifier: ^19.1.0
+    version: 19.1.0
   '@types/jest':
     specifier: ^29.5.12
     version: 29.5.12
@@ -834,7 +837,6 @@ packages:
 
   /@octokit/openapi-types@19.1.0:
     resolution: {integrity: sha512-6G+ywGClliGQwRsjvqVYpklIfa7oRPA0vyhPQG/1Feh+B+wU0vGH1JiJ5T25d3g1JZYBHzR2qefLi9x8Gt+cpw==}
-    dev: false
 
   /@octokit/plugin-paginate-rest@9.1.5(@octokit/core@5.0.2):
     resolution: {integrity: sha512-WKTQXxK+bu49qzwv4qKbMMRXej1DU2gq017euWyKVudA6MldaSSQuxtz+vGbhxV4CjxpUxjZu6rM2wfc1FiWVg==}
