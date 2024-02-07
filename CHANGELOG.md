@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0](https://github.com/4m-mazi/souji-action/compare/v1.0.0...v1.1.0) (2024-02-07)
+
+
+### Features
+
+* improve logging ([#33](https://github.com/4m-mazi/souji-action/issues/33)) ([6e4ecb5](https://github.com/4m-mazi/souji-action/commit/6e4ecb54a0685495abd9b163bd213f0dcfc53d14))
+* logging the number of caches ([#40](https://github.com/4m-mazi/souji-action/issues/40)) ([9ec21be](https://github.com/4m-mazi/souji-action/commit/9ec21bed6832ba0d0c5c74da5366df6953a11424))
+
+
+### Bug Fixes
+
+* fix cache deletion ([#39](https://github.com/4m-mazi/souji-action/issues/39)) ([22c3bda](https://github.com/4m-mazi/souji-action/commit/22c3bdaf04ac0c745ced6632047bac66e2170428))
+
 ## [1.0.0](https://github.com/4m-mazi/souji-action/compare/v0.1.0...v1.0.0) (2024-01-22)
 
 
