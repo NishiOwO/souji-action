@@ -29,6 +29,7 @@ const deleteRefActionsCaches = async (
       per_page: 100
     }
   )
+  core.info(`⌛ Deleting ${caches.length} cache(s) on ${ref}`)
 
   await Promise.all(caches.map(async cache => deleteCache(cache)))
 }
@@ -54,7 +55,6 @@ export async function run(): Promise<void> {
       )
       return
     }
-    core.info(`⌛ Deleting caches on ${ref}`)
     await deleteRefActionsCaches(octokit, repo, ref)
     core.info('✅ Done')
   } catch (error) {

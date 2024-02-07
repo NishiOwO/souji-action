@@ -29695,6 +29695,7 @@ const deleteRefActionsCaches = async (octokit, repo, ref) => {
         ref,
         per_page: 100
     });
+    core.info(`⌛ Deleting ${caches.length} cache(s) on ${ref}`);
     await Promise.all(caches.map(async (cache) => deleteCache(cache)));
 };
 /**
@@ -29713,7 +29714,6 @@ async function run() {
             core.info('ℹ️ If you suspect this is a bug, please consider raising an issue to help us address it promptly.');
             return;
         }
-        core.info(`⌛ Deleting caches on ${ref}`);
         await deleteRefActionsCaches(octokit, repo, ref);
         core.info('✅ Done');
     }
