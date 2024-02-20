@@ -4,6 +4,8 @@ on:
 
 name: release-please
 
+permissions: {}
+
 jobs:
   release-please:
     if: github.repository_owner == '4m-mazi'
