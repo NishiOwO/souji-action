@@ -29704,7 +29704,7 @@ const deleteRefActionsCaches = async (octokit, repo, ref) => {
  */
 async function run() {
     try {
-        const token = core.getInput('repo-token');
+        const token = core.getInput('repo-token', { required: true });
         const octokit = github.getOctokit(token);
         // get repostiory information
         const { repo, eventName, payload } = github.context;

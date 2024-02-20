@@ -40,7 +40,7 @@ const deleteRefActionsCaches = async (
  */
 export async function run(): Promise<void> {
   try {
-    const token = core.getInput('repo-token')
+    const token = core.getInput('repo-token', { required: true })
     const octokit = github.getOctokit(token)
 
     // get repostiory information
