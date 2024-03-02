@@ -29760,7 +29760,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getRef = void 0;
-const v = __importStar(__nccwpck_require__(7085));
+const v = __importStar(__nccwpck_require__(5061));
 const schema_1 = __nccwpck_require__(3731);
 const utils_1 = __nccwpck_require__(1356);
 const getRef = ({ eventName, payload }) => {
@@ -29821,7 +29821,7 @@ exports.getRef = getRef;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NullableStringSchema = exports.OptionalStringSchema = exports.StringSchema = void 0;
-const valibot_1 = __nccwpck_require__(7085);
+const valibot_1 = __nccwpck_require__(5061);
 exports.StringSchema = (0, valibot_1.string)();
 exports.OptionalStringSchema = (0, valibot_1.optional)((0, valibot_1.string)());
 exports.NullableStringSchema = (0, valibot_1.nullable)((0, valibot_1.string)());
@@ -31672,7 +31672,7 @@ module.exports = parseParams
 
 /***/ }),
 
-/***/ 7085:
+/***/ 5061:
 /***/ ((module) => {
 
 "use strict";
@@ -31760,6 +31760,7 @@ __export(src_exports, {
   enumTypeAsync: () => enumTypeAsync,
   enum_: () => enum_,
   equal: () => equal,
+  every: () => every,
   excludes: () => excludes,
   fallback: () => fallback,
   fallbackAsync: () => fallbackAsync,
@@ -31802,6 +31803,8 @@ __export(src_exports, {
   isoTimestamp: () => isoTimestamp,
   isoWeek: () => isoWeek,
   keyof: () => keyof,
+  lazy: () => lazy,
+  lazyAsync: () => lazyAsync,
   length: () => length,
   literal: () => literal,
   literalAsync: () => literalAsync,
@@ -31889,6 +31892,7 @@ __export(src_exports, {
   setSchemaMessage: () => setSchemaMessage,
   setSpecificMessage: () => setSpecificMessage,
   size: () => size,
+  some: () => some,
   special: () => special,
   specialAsync: () => specialAsync,
   startsWith: () => startsWith,
@@ -32087,8 +32091,8 @@ function deleteSpecificMessage(reference, lang) {
 }
 
 // src/utils/i18n/i18n.ts
-function i18n(context, reference, config, issue) {
-  const message = context.message ?? getSpecificMessage(reference, issue.lang) ?? (context.type === "type" ? getSchemaMessage(issue.lang) : null) ?? config?.message ?? getGlobalMessage(issue.lang) ?? issue.message;
+function i18n(schema, context, reference, config, issue) {
+  const message = context.message ?? getSpecificMessage(reference, issue.lang) ?? (schema ? getSchemaMessage(issue.lang) : null) ?? config?.message ?? getGlobalMessage(issue.lang) ?? issue.message;
   return typeof message === "function" ? message(issue) : message;
 }
 
@@ -32139,6 +32143,7 @@ function pipeIssue(context, config, issue) {
     skipPipe: config?.skipPipe
   };
   schemaIssue2.message = i18n(
+    false,
     issue.context,
     issue.reference,
     config,
@@ -32220,7 +32225,7 @@ function schemaIssue(context, reference, input, config, other) {
     abortPipeEarly: config?.abortPipeEarly,
     skipPipe: config?.skipPipe
   };
-  issue.message = i18n(context, reference, config, issue);
+  issue.message = i18n(true, context, reference, config, issue);
   return { typed: false, output: input, issues: [issue] };
 }
 
@@ -32889,6 +32894,34 @@ function intersect(options, arg2, arg3) {
   };
 }
 var intersection = intersect;
+
+// src/schemas/lazy/lazy.ts
+function lazy(getter) {
+  return {
+    type: "lazy",
+    expects: "unknown",
+    async: false,
+    getter,
+    _parse(input, config) {
+      return this.getter(input)._parse(input, config);
+    }
+  };
+}
+var recursive = lazy;
+
+// src/schemas/lazy/lazyAsync.ts
+function lazyAsync(getter) {
+  return {
+    type: "lazy",
+    expects: "unknown",
+    async: true,
+    getter,
+    async _parse(input, config) {
+      return (await this.getter(input))._parse(input, config);
+    }
+  };
+}
+var recursiveAsync = lazyAsync;
 
 // src/schemas/literal/literal.ts
 function literal(literal_, message) {
@@ -33906,32 +33939,6 @@ function recordAsync(arg1, arg2, arg3, arg4) {
         return schemaResult(false, output, issues);
       }
       return schemaIssue(this, recordAsync, input, config);
-    }
-  };
-}
-
-// src/schemas/recursive/recursive.ts
-function recursive(getter) {
-  return {
-    type: "recursive",
-    expects: "unknown",
-    async: false,
-    getter,
-    _parse(input, config) {
-      return this.getter()._parse(input, config);
-    }
-  };
-}
-
-// src/schemas/recursive/recursiveAsync.ts
-function recursiveAsync(getter) {
-  return {
-    type: "recursive",
-    expects: "unknown",
-    async: true,
-    getter,
-    async _parse(input, config) {
-      return this.getter()._parse(input, config);
     }
   };
 }
@@ -35014,19 +35021,20 @@ function transform(schema, action, arg1) {
     ...schema,
     _parse(input, config) {
       const result = schema._parse(input, config);
-      if (result.typed) {
+      if (result.issues) {
+        result.typed = false;
+      } else {
         result.output = action(result.output, { issues: result.issues });
-        if (result.issues || !arg1) {
-          return result;
+        if (arg1) {
+          if (Array.isArray(arg1)) {
+            return pipeResult(
+              { type: typeof result.output, pipe: arg1 },
+              result.output,
+              config
+            );
+          }
+          return arg1._parse(result.output, config);
         }
-        if (Array.isArray(arg1)) {
-          return pipeResult(
-            { type: typeof result.output, pipe: arg1 },
-            result.output,
-            config
-          );
-        }
-        return arg1._parse(result.output, config);
       }
       return result;
     }
@@ -35040,19 +35048,20 @@ function transformAsync(schema, action, arg1) {
     async: true,
     async _parse(input, config) {
       const result = await schema._parse(input, config);
-      if (result.typed) {
+      if (result.issues) {
+        result.typed = false;
+      } else {
         result.output = await action(result.output, { issues: result.issues });
-        if (result.issues || !arg1) {
-          return result;
+        if (arg1) {
+          if (Array.isArray(arg1)) {
+            return pipeResultAsync(
+              { type: typeof result.output, pipe: arg1 },
+              result.output,
+              config
+            );
+          }
+          return arg1._parse(result.output, config);
         }
-        if (Array.isArray(arg1)) {
-          return pipeResultAsync(
-            { type: typeof result.output, pipe: arg1 },
-            result.output,
-            config
-          );
-        }
-        return arg1._parse(result.output, config);
       }
       return result;
     }
@@ -35415,6 +35424,23 @@ function equal(requirement, message) {
         return actionOutput(input);
       }
       return actionIssue(this, equal, input, "value");
+    }
+  };
+}
+
+// src/validations/every/every.ts
+function every(requirement, message) {
+  return {
+    type: "every",
+    expects: null,
+    async: false,
+    message,
+    requirement,
+    _parse(input) {
+      if (input.every(this.requirement)) {
+        return actionOutput(input);
+      }
+      return actionIssue(this, every, input, "input");
     }
   };
 }
@@ -36124,6 +36150,23 @@ function size(requirement, message) {
         return actionOutput(input);
       }
       return actionIssue(this, size, input, "size", `${input.size}`);
+    }
+  };
+}
+
+// src/validations/some/some.ts
+function some(requirement, message) {
+  return {
+    type: "some",
+    expects: null,
+    async: false,
+    message,
+    requirement,
+    _parse(input) {
+      if (input.some(this.requirement)) {
+        return actionOutput(input);
+      }
+      return actionIssue(this, some, input, "input");
     }
   };
 }
