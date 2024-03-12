@@ -29760,7 +29760,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getRef = void 0;
-const v = __importStar(__nccwpck_require__(5061));
+const v = __importStar(__nccwpck_require__(104));
 const schema_1 = __nccwpck_require__(3731);
 const utils_1 = __nccwpck_require__(1356);
 const getRef = ({ eventName, payload }) => {
@@ -29821,7 +29821,7 @@ exports.getRef = getRef;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NullableStringSchema = exports.OptionalStringSchema = exports.StringSchema = void 0;
-const valibot_1 = __nccwpck_require__(5061);
+const valibot_1 = __nccwpck_require__(104);
 exports.StringSchema = (0, valibot_1.string)();
 exports.OptionalStringSchema = (0, valibot_1.optional)((0, valibot_1.string)());
 exports.NullableStringSchema = (0, valibot_1.nullable)((0, valibot_1.string)());
@@ -31672,7 +31672,7 @@ module.exports = parseParams
 
 /***/ }),
 
-/***/ 5061:
+/***/ 104:
 /***/ ((module) => {
 
 "use strict";
@@ -31750,16 +31750,11 @@ __export(src_exports, {
   deleteGlobalMessage: () => deleteGlobalMessage,
   deleteSchemaMessage: () => deleteSchemaMessage,
   deleteSpecificMessage: () => deleteSpecificMessage,
-  discriminatedUnion: () => discriminatedUnion,
-  discriminatedUnionAsync: () => discriminatedUnionAsync,
   email: () => email,
   emoji: () => emoji,
   endsWith: () => endsWith,
   enumAsync: () => enumAsync,
-  enumType: () => enumType,
-  enumTypeAsync: () => enumTypeAsync,
   enum_: () => enum_,
-  equal: () => equal,
   every: () => every,
   excludes: () => excludes,
   fallback: () => fallback,
@@ -31790,12 +31785,13 @@ __export(src_exports, {
   instanceAsync: () => instanceAsync,
   integer: () => integer,
   intersect: () => intersect,
-  intersection: () => intersection,
+  intersectAsync: () => intersectAsync,
   ip: () => ip,
   ipv4: () => ipv4,
   ipv6: () => ipv6,
   is: () => is,
   isLuhnAlgo: () => isLuhnAlgo,
+  isOfType: () => isOfType,
   isoDate: () => isoDate,
   isoDateTime: () => isoDateTime,
   isoTime: () => isoTime,
@@ -31815,7 +31811,6 @@ __export(src_exports, {
   mapAsync: () => mapAsync,
   maxBytes: () => maxBytes,
   maxLength: () => maxLength,
-  maxRange: () => maxRange,
   maxSize: () => maxSize,
   maxValue: () => maxValue,
   merge: () => merge,
@@ -31823,14 +31818,11 @@ __export(src_exports, {
   mimeType: () => mimeType,
   minBytes: () => minBytes,
   minLength: () => minLength,
-  minRange: () => minRange,
   minSize: () => minSize,
   minValue: () => minValue,
   multipleOf: () => multipleOf,
   nan: () => nan,
   nanAsync: () => nanAsync,
-  nativeEnum: () => nativeEnum,
-  nativeEnumAsync: () => nativeEnumAsync,
   never: () => never,
   neverAsync: () => neverAsync,
   nonNullable: () => nonNullable,
@@ -31844,8 +31836,6 @@ __export(src_exports, {
   notSize: () => notSize,
   notValue: () => notValue,
   nullAsync: () => nullAsync,
-  nullType: () => nullType,
-  nullTypeAsync: () => nullTypeAsync,
   null_: () => null_,
   nullable: () => nullable,
   nullableAsync: () => nullableAsync,
@@ -31864,8 +31854,6 @@ __export(src_exports, {
   parseAsync: () => parseAsync,
   partial: () => partial,
   partialAsync: () => partialAsync,
-  passthrough: () => passthrough,
-  passthroughAsync: () => passthroughAsync,
   pick: () => pick,
   pickAsync: () => pickAsync,
   picklist: () => picklist,
@@ -31874,8 +31862,6 @@ __export(src_exports, {
   pipeResultAsync: () => pipeResultAsync,
   record: () => record,
   recordAsync: () => recordAsync,
-  recursive: () => recursive,
-  recursiveAsync: () => recursiveAsync,
   regex: () => regex,
   required: () => required,
   requiredAsync: () => requiredAsync,
@@ -31896,13 +31882,9 @@ __export(src_exports, {
   special: () => special,
   specialAsync: () => specialAsync,
   startsWith: () => startsWith,
-  strict: () => strict,
-  strictAsync: () => strictAsync,
   string: () => string,
   stringAsync: () => stringAsync,
   stringify: () => stringify,
-  strip: () => strip,
-  stripAsync: () => stripAsync,
   symbol: () => symbol,
   symbolAsync: () => symbolAsync,
   toCustom: () => toCustom,
@@ -31920,8 +31902,6 @@ __export(src_exports, {
   tupleAsync: () => tupleAsync,
   ulid: () => ulid,
   undefinedAsync: () => undefinedAsync,
-  undefinedType: () => undefinedType,
-  undefinedTypeAsync: () => undefinedTypeAsync,
   undefined_: () => undefined_,
   union: () => union,
   unionAsync: () => unionAsync,
@@ -31929,16 +31909,12 @@ __export(src_exports, {
   unknownAsync: () => unknownAsync,
   unwrap: () => unwrap,
   url: () => url,
-  useDefault: () => useDefault,
   uuid: () => uuid,
   value: () => value,
   variant: () => variant,
   variantAsync: () => variantAsync,
   voidAsync: () => voidAsync,
-  voidType: () => voidType,
-  voidTypeAsync: () => voidTypeAsync,
-  void_: () => void_,
-  withDefault: () => withDefault
+  void_: () => void_
 });
 module.exports = __toCommonJS(src_exports);
 
@@ -32109,6 +32085,11 @@ function isLuhnAlgo(input) {
     sum += bit ? [0, 2, 4, 6, 8, 1, 3, 5, 7, 9][value2] : value2;
   }
   return sum % 10 === 0;
+}
+
+// src/utils/isOfType/isOfType.ts
+function isOfType(type, object2) {
+  return object2.type === type;
 }
 
 // src/utils/schemaResult/schemaResult.ts
@@ -32345,87 +32326,86 @@ async function getDefaultAsync(schema) {
 
 // src/methods/getDefaults/getDefaults.ts
 function getDefaults(schema) {
-  let defaults;
   if (schema.default !== void 0) {
-    defaults = getDefault(schema);
-  } else if ("type" in schema) {
-    if (schema.type === "object") {
-      defaults = {};
-      for (const key in schema.entries) {
-        defaults[key] = getDefaults(schema.entries[key]);
-      }
-    } else if (schema.type === "tuple") {
-      defaults = [];
-      for (let key = 0; key < schema.items.length; key++) {
-        defaults.push(getDefaults(schema.items[key]));
-      }
-    }
+    return getDefault(schema);
   }
-  return defaults;
+  if (isOfType("object", schema)) {
+    return Object.fromEntries(
+      Object.entries(schema.entries).map(([key, value2]) => [
+        key,
+        getDefaults(value2)
+      ])
+    );
+  }
+  if (isOfType("tuple", schema)) {
+    return schema.items.map(getDefaults);
+  }
+  return void 0;
 }
 
 // src/methods/getDefaults/getDefaultsAsync.ts
 async function getDefaultsAsync(schema) {
-  let defaults;
   if (schema.default !== void 0) {
-    defaults = await getDefaultAsync(schema);
-  } else if ("type" in schema) {
-    if (schema.type === "object") {
-      defaults = {};
-      for (const key in schema.entries) {
-        defaults[key] = await getDefaultsAsync(schema.entries[key]);
-      }
-    } else if (schema.type === "tuple") {
-      defaults = [];
-      for (let key = 0; key < schema.items.length; key++) {
-        defaults.push(await getDefaultsAsync(schema.items[key]));
-      }
-    }
+    return getDefaultAsync(schema);
   }
-  return defaults;
+  if (isOfType("object", schema)) {
+    return Object.fromEntries(
+      await Promise.all(
+        Object.entries(schema.entries).map(async ([key, value2]) => [
+          key,
+          await getDefaultsAsync(value2)
+        ])
+      )
+    );
+  }
+  if (isOfType("tuple", schema)) {
+    return Promise.all(
+      schema.items.map(getDefaultsAsync)
+    );
+  }
+  return void 0;
 }
 
 // src/methods/getFallbacks/getFallbacks.ts
 function getFallbacks(schema) {
-  let fallbacks;
   if (schema.fallback !== void 0) {
-    fallbacks = getFallback(schema);
-  } else if ("type" in schema) {
-    if (schema.type === "object") {
-      fallbacks = {};
-      for (const key in schema.entries) {
-        fallbacks[key] = getFallbacks(schema.entries[key]);
-      }
-    } else if (schema.type === "tuple") {
-      fallbacks = [];
-      for (let key = 0; key < schema.items.length; key++) {
-        fallbacks.push(getFallbacks(schema.items[key]));
-      }
-    }
+    return getFallback(schema);
   }
-  return fallbacks;
+  if (isOfType("object", schema)) {
+    return Object.fromEntries(
+      Object.entries(schema.entries).map(([key, value2]) => [
+        key,
+        getFallbacks(value2)
+      ])
+    );
+  }
+  if (isOfType("tuple", schema)) {
+    return schema.items.map(getFallbacks);
+  }
+  return void 0;
 }
 
 // src/methods/getFallbacks/getFallbacksAsync.ts
 async function getFallbacksAsync(schema) {
-  let fallbacks;
   if (schema.fallback !== void 0) {
-    fallbacks = await getFallbackAsync(schema);
-  } else if ("type" in schema) {
-    if (schema.type === "object") {
-      fallbacks = {};
-      await Promise.all(
-        Object.entries(schema.entries).map(async ([key, schema2]) => {
-          fallbacks[key] = await getFallbacksAsync(schema2);
-        })
-      );
-    } else if (schema.type === "tuple") {
-      fallbacks = await Promise.all(
-        schema.items.map((schema2) => getFallbacksAsync(schema2))
-      );
-    }
+    return getFallbackAsync(schema);
   }
-  return fallbacks;
+  if (isOfType("object", schema)) {
+    return Object.fromEntries(
+      await Promise.all(
+        Object.entries(schema.entries).map(async ([key, value2]) => [
+          key,
+          await getFallbacksAsync(value2)
+        ])
+      )
+    );
+  }
+  if (isOfType("tuple", schema)) {
+    return Promise.all(
+      schema.items.map(getFallbacksAsync)
+    );
+  }
+  return void 0;
 }
 
 // src/methods/is/is.ts
@@ -32747,7 +32727,6 @@ function enum_(enum__, message) {
     }
   };
 }
-var nativeEnum = enum_;
 
 // src/schemas/enum/enumAsync.ts
 function enumAsync(enum_2, message) {
@@ -32766,7 +32745,6 @@ function enumAsync(enum_2, message) {
     }
   };
 }
-var nativeEnumAsync = enumAsync;
 
 // src/schemas/instance/instance.ts
 function instance(class_, arg2, arg3) {
@@ -32893,7 +32871,63 @@ function intersect(options, arg2, arg3) {
     }
   };
 }
-var intersection = intersect;
+
+// src/schemas/intersect/intersectAsync.ts
+function intersectAsync(options, arg2, arg3) {
+  const [message, pipe] = defaultArgs(arg2, arg3);
+  return {
+    type: "intersect",
+    expects: [...new Set(options.map((option) => option.expects))].join(" & "),
+    async: true,
+    options,
+    message,
+    pipe,
+    async _parse(input, config) {
+      let typed = true;
+      let issues;
+      let output;
+      const outputs = [];
+      await Promise.all(
+        this.options.map(async (schema) => {
+          if (!(config?.abortEarly && issues)) {
+            const result = await schema._parse(input, config);
+            if (!(config?.abortEarly && issues)) {
+              if (result.issues) {
+                if (issues) {
+                  for (const issue of result.issues) {
+                    issues.push(issue);
+                  }
+                } else {
+                  issues = result.issues;
+                }
+                if (config?.abortEarly) {
+                  typed = false;
+                  throw null;
+                }
+              }
+              if (!result.typed) {
+                typed = false;
+              }
+              outputs.push(result.output);
+            }
+          }
+        })
+      ).catch(() => null);
+      if (typed) {
+        output = outputs[0];
+        for (let index = 1; index < outputs.length; index++) {
+          const result = mergeOutputs(output, outputs[index]);
+          if (result.invalid) {
+            return schemaIssue(this, intersectAsync, input, config);
+          }
+          output = result.output;
+        }
+        return pipeResultAsync(this, output, config, issues);
+      }
+      return schemaResult(false, output, issues);
+    }
+  };
+}
 
 // src/schemas/lazy/lazy.ts
 function lazy(getter) {
@@ -32907,7 +32941,6 @@ function lazy(getter) {
     }
   };
 }
-var recursive = lazy;
 
 // src/schemas/lazy/lazyAsync.ts
 function lazyAsync(getter) {
@@ -32921,7 +32954,6 @@ function lazyAsync(getter) {
     }
   };
 }
-var recursiveAsync = lazyAsync;
 
 // src/schemas/literal/literal.ts
 function literal(literal_, message) {
@@ -33372,7 +33404,6 @@ function null_(message) {
     }
   };
 }
-var nullType = null_;
 
 // src/schemas/null/nullAsync.ts
 function nullAsync(message) {
@@ -33389,7 +33420,6 @@ function nullAsync(message) {
     }
   };
 }
-var nullTypeAsync = nullAsync;
 
 // src/schemas/number/number.ts
 function number(arg1, arg2) {
@@ -33702,7 +33732,6 @@ function picklist(options, message) {
     }
   };
 }
-var enumType = picklist;
 
 // src/schemas/picklist/picklistAsync.ts
 function picklistAsync(options, message) {
@@ -33720,7 +33749,6 @@ function picklistAsync(options, message) {
     }
   };
 }
-var enumTypeAsync = picklistAsync;
 
 // src/schemas/string/string.ts
 function string(arg1, arg2) {
@@ -34356,7 +34384,6 @@ function undefined_(message) {
     }
   };
 }
-var undefinedType = undefined_;
 
 // src/schemas/undefined/undefinedAsync.ts
 function undefinedAsync(message) {
@@ -34373,7 +34400,6 @@ function undefinedAsync(message) {
     }
   };
 }
-var undefinedTypeAsync = undefinedAsync;
 
 // src/schemas/union/utils/subissues/subissues.ts
 function subissues(results) {
@@ -34606,7 +34632,6 @@ function variant(key, options, arg3, arg4) {
     }
   };
 }
-var discriminatedUnion = variant;
 
 // src/schemas/variant/variantAsync.ts
 function variantAsync(key, options, arg3, arg4) {
@@ -34686,7 +34711,6 @@ function variantAsync(key, options, arg3, arg4) {
     }
   };
 }
-var discriminatedUnionAsync = variantAsync;
 
 // src/schemas/void/void.ts
 function void_(message) {
@@ -34703,7 +34727,6 @@ function void_(message) {
     }
   };
 }
-var voidType = void_;
 
 // src/schemas/void/voidAsync.ts
 function voidAsync(message) {
@@ -34720,7 +34743,6 @@ function voidAsync(message) {
     }
   };
 }
-var voidTypeAsync = voidAsync;
 
 // src/methods/keyof/keyof.ts
 function keyof(schema) {
@@ -34837,34 +34859,6 @@ function partialAsync(schema, arg2, arg3, arg4) {
   );
 }
 
-// src/methods/passthrough/passthrough.ts
-function passthrough(schema) {
-  return {
-    ...schema,
-    _parse(input, config) {
-      const result = schema._parse(input, config);
-      if (result.typed) {
-        result.output = { ...input, ...result.output };
-      }
-      return result;
-    }
-  };
-}
-
-// src/methods/passthrough/passthroughAsync.ts
-function passthroughAsync(schema) {
-  return {
-    ...schema,
-    async _parse(input, config) {
-      const result = await schema._parse(input, config);
-      if (result.typed) {
-        result.output = { ...input, ...result.output };
-      }
-      return result;
-    }
-  };
-}
-
 // src/methods/pick/pick.ts
 function pick(schema, keys, arg3, arg4, arg5) {
   const [rest, message, pipe] = restAndDefaultArgs(arg3, arg4, arg5);
@@ -34933,9 +34927,7 @@ function safeParse(schema, input, config) {
   return {
     typed: result.typed,
     success: !result.issues,
-    data: result.output,
     output: result.output,
-    error: result.issues && new ValiError(result.issues),
     issues: result.issues
   };
 }
@@ -34946,72 +34938,8 @@ async function safeParseAsync(schema, input, config) {
   return {
     typed: result.typed,
     success: !result.issues,
-    data: result.output,
     output: result.output,
-    error: result.issues && new ValiError(result.issues),
     issues: result.issues
-  };
-}
-
-// src/methods/strict/strict.ts
-function strict(schema) {
-  return {
-    ...schema,
-    _parse(input, config) {
-      const result = schema._parse(input, config);
-      return !result.issues && Object.keys(input).some((key) => !(key in schema.entries)) ? schemaIssue(this, object, input, config) : result;
-    }
-  };
-}
-
-// src/methods/strict/strictAsync.ts
-function strictAsync(schema) {
-  return {
-    ...schema,
-    async _parse(input, config) {
-      const result = await schema._parse(input, config);
-      return !result.issues && Object.keys(input).some((key) => !(key in schema.entries)) ? schemaIssue(this, objectAsync, input, config) : result;
-    }
-  };
-}
-
-// src/methods/strip/strip.ts
-function strip(schema) {
-  let cachedKeys;
-  return {
-    ...schema,
-    _parse(input, config) {
-      const result = schema._parse(input, config);
-      if (result.typed) {
-        cachedKeys = cachedKeys ?? Object.keys(schema.entries);
-        const output = {};
-        for (const key of cachedKeys) {
-          output[key] = result.output[key];
-        }
-        result.output = output;
-      }
-      return result;
-    }
-  };
-}
-
-// src/methods/strip/stripAsync.ts
-function stripAsync(schema) {
-  let cachedKeys;
-  return {
-    ...schema,
-    async _parse(input, config) {
-      const result = await schema._parse(input, config);
-      if (result.typed) {
-        cachedKeys = cachedKeys ?? Object.keys(schema.entries);
-        const output = {};
-        for (const key of cachedKeys) {
-          output[key] = result.output[key];
-        }
-        result.output = output;
-      }
-      return result;
-    }
   };
 }
 
@@ -35072,20 +35000,6 @@ function transformAsync(schema, action, arg1) {
 function unwrap(schema) {
   return schema.wrapped;
 }
-
-// src/methods/withDefault/withDefault.ts
-function withDefault(schema, value2) {
-  return {
-    ...schema,
-    _parse(input, config) {
-      return schema._parse(
-        input === void 0 ? typeof value2 === "function" ? value2() : value2 : input,
-        config
-      );
-    }
-  };
-}
-var useDefault = withDefault;
 
 // src/regex.ts
 var BIC_REGEX = /^[A-Z]{6}(?!00)[A-Z\d]{2}(?:[A-Z\d]{3})?$/u;
@@ -35407,23 +35321,6 @@ function endsWith(requirement, message) {
         "end",
         `"${input.slice(-this.requirement.length)}"`
       );
-    }
-  };
-}
-
-// src/validations/equal/equal.ts
-function equal(requirement, message) {
-  return {
-    type: "equal",
-    expects: stringify(requirement),
-    async: false,
-    message,
-    requirement,
-    _parse(input) {
-      if (input === this.requirement) {
-        return actionOutput(input);
-      }
-      return actionIssue(this, equal, input, "value");
     }
   };
 }
@@ -35899,7 +35796,6 @@ function maxValue(requirement, message) {
     }
   };
 }
-var maxRange = maxValue;
 
 // src/validations/minBytes/minBytes.ts
 function minBytes(requirement, message) {
@@ -35992,7 +35888,6 @@ function minValue(requirement, message) {
     }
   };
 }
-var minRange = minValue;
 
 // src/validations/multipleOf/multipleOf.ts
 function multipleOf(requirement, message) {
