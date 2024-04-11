@@ -29620,6 +29620,46 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 9814:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getInputs = void 0;
+const core = __importStar(__nccwpck_require__(9093));
+const getInputs = () => ({
+    token: core.getInput('repo-token', { required: true }),
+    dryRun: core.getBooleanInput('dry-run')
+});
+exports.getInputs = getInputs;
+
+
+/***/ }),
+
 /***/ 1356:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -29679,15 +29719,20 @@ exports.run = void 0;
 const core = __importStar(__nccwpck_require__(9093));
 const github = __importStar(__nccwpck_require__(5942));
 const ref_1 = __nccwpck_require__(2636);
-const deleteRefActionsCaches = async (octokit, repo, ref) => {
+const get_inputs_1 = __nccwpck_require__(9814);
+const ansi = { reset: '\x1B[0m', dryRun: '\x1B[38;2;90;185;255m' };
+const prefix = ({ isDryRun = false }) => isDryRun ? `${ansi.dryRun}DRY-RUN MODE ${ansi.reset}` : '';
+const deleteRefActionsCaches = async (octokit, repo, ref, isDryRun) => {
     const deleteCache = async (cache) => {
         if (!cache.id)
             return;
-        core.info(`   - Cache with key ${cache.key}`);
-        await octokit.rest.actions.deleteActionsCacheById({
-            ...repo,
-            cache_id: cache.id
-        });
+        core.info(`${prefix({ isDryRun })}   - Cache with key ${cache.key}`);
+        if (!isDryRun) {
+            await octokit.rest.actions.deleteActionsCacheById({
+                ...repo,
+                cache_id: cache.id
+            });
+        }
     };
     // https://github.com/octokit/plugin-paginate-rest.js#octokitpaginate
     const caches = await octokit.paginate(octokit.rest.actions.getActionsCacheList, {
@@ -29695,7 +29740,7 @@ const deleteRefActionsCaches = async (octokit, repo, ref) => {
         ref,
         per_page: 100
     });
-    core.info(`⌛ Deleting ${caches.length} cache(s) on ${ref}`);
+    core.info(`${prefix({ isDryRun })}⌛ Deleting ${caches.length} cache(s) on ${ref}`);
     await Promise.all(caches.map(async (cache) => deleteCache(cache)));
 };
 /**
@@ -29704,7 +29749,7 @@ const deleteRefActionsCaches = async (octokit, repo, ref) => {
  */
 async function run() {
     try {
-        const token = core.getInput('repo-token', { required: true });
+        const { token, dryRun: isDryRun } = (0, get_inputs_1.getInputs)();
         const octokit = github.getOctokit(token);
         // get repostiory information
         const { repo, eventName, payload } = github.context;
@@ -29714,8 +29759,8 @@ async function run() {
             core.info('ℹ️ If you suspect this is a bug, please consider raising an issue to help us address it promptly.');
             return;
         }
-        await deleteRefActionsCaches(octokit, repo, ref);
-        core.info('✅ Done');
+        await deleteRefActionsCaches(octokit, repo, ref, isDryRun);
+        core.info(`${prefix({ isDryRun })}✅ Done`);
     }
     catch (error) {
         // Fail the workflow run if an error occurs
