@@ -50,6 +50,12 @@ This will clear the following cache:
   - When a branch is deleted, this workflow deletes the cached data associated
     with the branch.
 
+## Inputs
+
+| Name      | Description                         | Type    | Default |
+| :-------- | :---------------------------------- | :------ | :------ |
+| `dry-run` | If `true`, dry-run caches deletion. | Boolean | `false` |
+
 ## Supported events
 
 > [!IMPORTANT]\
