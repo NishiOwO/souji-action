@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0](https://github.com/4m-mazi/souji-action/compare/v1.1.0...v1.2.0) (2024-04-13)
+
+
+### Features
+
+* add dry-run option ([#34](https://github.com/4m-mazi/souji-action/issues/34)) ([e241ee0](https://github.com/4m-mazi/souji-action/commit/e241ee033938b1563c6d9ece3212b9427abd3f02)), closes [#32](https://github.com/4m-mazi/souji-action/issues/32)
+
+
+### Dependencies
+
+* bump valibot from 0.27.1 to 0.28.1 ([#42](https://github.com/4m-mazi/souji-action/issues/42)) ([de527f3](https://github.com/4m-mazi/souji-action/commit/de527f3f54ce54f62199a55ba01a28ab64a95078))
+* bump valibot from 0.29.0 to 0.30.0 ([#55](https://github.com/4m-mazi/souji-action/issues/55)) ([e0a39ae](https://github.com/4m-mazi/souji-action/commit/e0a39ae6da96b7316d3c965dc528c2ac78d8c146))
+
 ## [1.1.0](https://github.com/4m-mazi/souji-action/compare/v1.0.0...v1.1.0) (2024-02-07)
 
 
