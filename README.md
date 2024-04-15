@@ -72,6 +72,7 @@ This will clear the following cache:
 | `delete` (tag)                | `refs/tags/<tag name>`                     |
 | `deployment_status`           | `<branch name>`                            |
 | `issue_comment` [^1]          | `refs/pull/<number>/merge`                 |
+| `merge_group`                 | `<branch name>`                            |
 | `pull_request` [^2]           | `refs/pull/<number>/merge`                 |
 | `pull_request_review`         | `refs/pull/<number>/merge`                 |
 | `pull_request_review_comment` | `refs/pull/<number>/merge`                 |

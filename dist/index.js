@@ -29827,6 +29827,8 @@ const getRef = ({ eventName, payload }) => {
             return (0, utils_1.convertRef)(v.parse(schema_1.StringSchema, payload.issue?.number.toString()), {
                 refType: 'pull'
             });
+        case 'merge_group':
+            return v.parse(schema_1.StringSchema, payload.merge_group.head_ref);
         case 'pull_request':
         case 'pull_request_review':
         case 'pull_request_review_comment':

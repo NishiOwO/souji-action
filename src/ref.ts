@@ -47,6 +47,8 @@ export const getRef = ({
           refType: 'pull'
         }
       )
+    case 'merge_group':
+      return v.parse(StringSchema, payload.merge_group.head_ref)
     case 'pull_request':
     case 'pull_request_review':
     case 'pull_request_review_comment':
