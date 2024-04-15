@@ -71,7 +71,10 @@
       "draft": false,
       "prerelease": false,
       "include-component-in-tag": false,
-      "pull-request-title-pattern": "release: v${version}"
+      "pull-request-title-pattern": "release: v${version}",
+      "extra-files": [
+        "README.md"
+      ]
     }
   },
   "release-label": "autorelease: published"

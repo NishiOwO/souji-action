@@ -21,6 +21,8 @@ future. This action allows you to easily delete such caches.
 `actions:write` permission is
 [required to delete caches](https://docs.github.com/en/rest/actions/cache?apiVersion=2022-11-28#delete-a-github-actions-cache-for-a-repository-using-a-cache-id).
 
+<!-- x-release-please-start-version -->
+
 ```yml
 name: cleanup caches by a branch
 on:
@@ -36,8 +38,10 @@ jobs:
       actions: write
     steps:
       - name: Cleanup
-        uses: 4m-mazi/souji-action@v1 # Check and specify the latest version
+        uses: 4m-mazi/souji-action@v1.2.0
 ```
+
+<!-- x-release-please-end -->
 
 This workflow cleans up caches for branches when they are merged(closed) or
 deleted. \
