@@ -44,7 +44,7 @@ jobs:
       actions: write
     steps:
       - name: Cleanup
-        uses: 4m-mazi/souji-action@v1.2.0
+        uses: 4m-mazi/souji-action@v1.3.0
         with:
           branch-names: ${{ inputs.branchNames }}
 ```

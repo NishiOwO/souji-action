@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/4m-mazi/souji-action/compare/v1.2.0...v1.3.0) (2024-04-21)
+
+
+### Features
+
+* add `branch-names` input ([#72](https://github.com/4m-mazi/souji-action/issues/72)) ([32dc0f6](https://github.com/4m-mazi/souji-action/commit/32dc0f640256cb9668de8eafe5225b2c66edba28))
+* add support `merge_group` event ([#68](https://github.com/4m-mazi/souji-action/issues/68)) ([3faed7d](https://github.com/4m-mazi/souji-action/commit/3faed7d473e1b9e77d915051af9c6ddc2db8a310))
+
 ## [1.2.0](https://github.com/4m-mazi/souji-action/compare/v1.1.0...v1.2.0) (2024-04-13)
 
 
