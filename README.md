@@ -67,14 +67,14 @@ This will clear the following cache:
 > [!NOTE]\
 > `List` type is a string of characters separated by newlines or spaces.
 >
-> ```yaml
+> ```yml
 > branch-names: |
 >   main
 >   refs/pull/123/merge
 >   refs/tags/1.0.0
 > ```
 >
-> ```yaml
+> ```yml
 > branch-names: main refs/pull/123/merge refs/tags/1.0.0
 > ```
 
