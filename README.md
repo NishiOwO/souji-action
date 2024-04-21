@@ -30,6 +30,12 @@ on:
     types:
       - closed
   delete:
+  workflow_dispatch:
+    inputs:
+      branchNames:
+        description: 'List of branch(ref) names with caches to be deleted'
+        required: false
+        type: string
 
 jobs:
   cleanup:
@@ -39,6 +45,8 @@ jobs:
     steps:
       - name: Cleanup
         uses: 4m-mazi/souji-action@v1.2.0
+        with:
+          branch-names: ${{ inputs.branchNames }}
 ```
 
 <!-- x-release-please-end -->
@@ -56,9 +64,24 @@ This will clear the following cache:
 
 ## Inputs
 
-| Name      | Description                         | Type    | Default |
-| :-------- | :---------------------------------- | :------ | :------ |
-| `dry-run` | If `true`, dry-run caches deletion. | Boolean | `false` |
+> [!NOTE]\
+> `List` type is a string of characters separated by newlines or spaces.
+>
+> ```yaml
+> branch-names: |
+>   main
+>   refs/pull/123/merge
+>   refs/tags/1.0.0
+> ```
+>
+> ```yaml
+> branch-names: main refs/pull/123/merge refs/tags/1.0.0
+> ```
+
+| Name           | Description                                                                                            | Type    | Default |
+| :------------- | :----------------------------------------------------------------------------------------------------- | :------ | :------ |
+| `dry-run`      | If `true`, dry-run caches deletion.                                                                    | Boolean | `false` |
+| `branch-names` | List of branch(ref) names with caches to be deleted (e.g., `main refs/pull/123/merge refs/tags/1.0.0`) | List    | N/A     |
 
 ## Supported events
 

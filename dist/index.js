@@ -29653,6 +29653,10 @@ exports.getInputs = void 0;
 const core = __importStar(__nccwpck_require__(9093));
 const getInputs = () => ({
     token: core.getInput('repo-token', { required: true }),
+    branchNames: core
+        .getInput('branch-names')
+        .split(/\s+/)
+        .filter(x => x !== ''),
     dryRun: core.getBooleanInput('dry-run')
 });
 exports.getInputs = getInputs;
@@ -29720,6 +29724,7 @@ const core = __importStar(__nccwpck_require__(9093));
 const github = __importStar(__nccwpck_require__(5942));
 const ref_1 = __nccwpck_require__(2636);
 const get_inputs_1 = __nccwpck_require__(9814);
+const utils_1 = __nccwpck_require__(1356);
 const ansi = { reset: '\x1B[0m', dryRun: '\x1B[38;2;90;185;255m' };
 const prefix = ({ isDryRun = false }) => isDryRun ? `${ansi.dryRun}DRY-RUN MODE ${ansi.reset}` : '';
 const deleteRefActionsCaches = async (octokit, repo, ref, isDryRun) => {
@@ -29740,8 +29745,9 @@ const deleteRefActionsCaches = async (octokit, repo, ref, isDryRun) => {
         ref,
         per_page: 100
     });
-    core.info(`${prefix({ isDryRun })}⌛ Deleting ${caches.length} cache(s) on ${ref}`);
+    core.startGroup(`${prefix({ isDryRun })}⌛ Deleting ${caches.length} cache(s) on ${ref}`);
     await Promise.all(caches.map(async (cache) => deleteCache(cache)));
+    core.endGroup();
 };
 /**
  * The main function for the action.
@@ -29749,17 +29755,25 @@ const deleteRefActionsCaches = async (octokit, repo, ref, isDryRun) => {
  */
 async function run() {
     try {
-        const { token, dryRun: isDryRun } = (0, get_inputs_1.getInputs)();
+        const { token, branchNames, dryRun: isDryRun } = (0, get_inputs_1.getInputs)();
         const octokit = github.getOctokit(token);
         // get repostiory information
         const { repo, eventName, payload } = github.context;
-        const ref = (0, ref_1.getRef)({ eventName, payload });
-        if (ref === null) {
-            core.info('🤔 Could not determine deletion target.');
+        const infoNull = (name) => {
+            core.info(`🤔 Could not determine deletion target: ${name}`);
             core.info('ℹ️ If you suspect this is a bug, please consider raising an issue to help us address it promptly.');
-            return;
+            return [];
+        };
+        const refs = branchNames.length === 0
+            ? [(0, ref_1.getRef)({ eventName, payload })].flatMap(x => x ? x : infoNull(eventName))
+            : branchNames
+                .map(branchName => (0, utils_1.convertRef)(branchName, { refType: 'branch' }))
+                // .filter(Boolean) // この時代のfilterの型定義って終わってたのか…
+                // HACK
+                .flatMap(x => (x ? x : []));
+        for (const ref of refs) {
+            await deleteRefActionsCaches(octokit, repo, ref, isDryRun);
         }
-        await deleteRefActionsCaches(octokit, repo, ref, isDryRun);
         core.info(`${prefix({ isDryRun })}✅ Done`);
     }
     catch (error) {

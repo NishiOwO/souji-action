@@ -3,6 +3,7 @@ import * as github from '@actions/github'
 import { getRef } from './ref'
 import type * as types from '@octokit/openapi-types'
 import { getInputs } from './get-inputs'
+import { convertRef } from './internal/utils'
 
 type Cache =
   types.components['schemas']['actions-cache-list']['actions_caches'][number]
@@ -38,11 +39,11 @@ const deleteRefActionsCaches = async (
       per_page: 100
     }
   )
-  core.info(
+  core.startGroup(
     `${prefix({ isDryRun })}⌛ Deleting ${caches.length} cache(s) on ${ref}`
   )
-
   await Promise.all(caches.map(async cache => deleteCache(cache)))
+  core.endGroup()
 }
 
 /**
@@ -51,21 +52,34 @@ const deleteRefActionsCaches = async (
  */
 export async function run(): Promise<void> {
   try {
-    const { token, dryRun: isDryRun } = getInputs()
+    const { token, branchNames, dryRun: isDryRun } = getInputs()
     const octokit = github.getOctokit(token)
 
     // get repostiory information
     const { repo, eventName, payload } = github.context
 
-    const ref = getRef({ eventName, payload })
-    if (ref === null) {
-      core.info('🤔 Could not determine deletion target.')
+    const infoNull = (name: string): never[] => {
+      core.info(`🤔 Could not determine deletion target: ${name}`)
       core.info(
         'ℹ️ If you suspect this is a bug, please consider raising an issue to help us address it promptly.'
       )
-      return
+      return []
     }
-    await deleteRefActionsCaches(octokit, repo, ref, isDryRun)
+
+    const refs: string[] =
+      branchNames.length === 0
+        ? [getRef({ eventName, payload })].flatMap(x =>
+            x ? x : infoNull(eventName)
+          )
+        : branchNames
+            .map(branchName => convertRef(branchName, { refType: 'branch' }))
+            // .filter(Boolean) // この時代のfilterの型定義って終わってたのか…
+            // HACK
+            .flatMap(x => (x ? x : []))
+
+    for (const ref of refs) {
+      await deleteRefActionsCaches(octokit, repo, ref, isDryRun)
+    }
 
     core.info(`${prefix({ isDryRun })}✅ Done`)
   } catch (error) {

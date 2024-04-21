@@ -14,6 +14,9 @@ inputs:
     description: 'The GitHub token used to manage repository action cache'
     required: true
     default: ${{ github.token }}
+  branch-names:
+    description: 'List of branch(ref) names with caches to be deleted (e.g., `main refs/pull/123/merge refs/tags/1.0.0`)'
+    required: false
   dry-run:
     description: 'If `true`, dry-run caches deletion.'
     required: false
